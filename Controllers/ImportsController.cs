@@ -15,11 +15,9 @@ namespace dvcsharp_core_api
    [Route("api/[controller]")]
    public class ImportsController : Controller
    {
-      private readonly GenericDataContext _context;
-
       public ImportsController(GenericDataContext context)
       {
-         _context = context;
+         // If you don't use the _context field elsewhere in the class, you can remove it.
       }
 
       [HttpPost]
@@ -27,25 +25,18 @@ namespace dvcsharp_core_api
       {
          XmlDocument xmlDocument = new XmlDocument();
          xmlDocument.Load(HttpContext.Request.Body);
-
          var entities = new List<Object>();
-
-         foreach(XmlElement xmlItem in xmlDocument.SelectNodes("Entities/Entity"))
+         foreach (XmlElement xmlItem in xmlDocument.SelectNodes("Entities/Entity"))
          {
             string typeName = xmlItem.GetAttribute("Type");
-
-            if(String.IsNullOrEmpty(typeName))
+            if (String.IsNullOrEmpty(typeName))
                continue;
-
             //Console.WriteLine("Trying to deserialize: " + typeName);
             //Console.WriteLine("Content: " + xmlItem.InnerXml);
-
             var xser = new XmlSerializer(Type.GetType(typeName));
             var reader = new XmlTextReader(new StringReader(xmlItem.InnerXml));
-
             entities.Add(xser.Deserialize(reader));
          }
-
          return Ok(entities);
       }
    }
