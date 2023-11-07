@@ -15,7 +15,7 @@ namespace dvcsharp_core_api
    public class ImportsController : Controller
    {
       private readonly GenericDataContext _context;
-Remove this unread private field '_context' or refactor the code to use its value.
+//Elimine este campo privado no leído '_context' o refactorice el código para usar su valor.
       public ImportsController(GenericDataContext context)
       {
          _context = context;
