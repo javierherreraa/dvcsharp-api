@@ -21,23 +21,54 @@ Remove this unread private field '_context' or refactor the code to use its valu
          _context = context;
       }
       [HttpPost]
-      public IActionResult Post()
-      {
-         XmlDocument xmlDocument = new XmlDocument();
-         xmlDocument.Load(HttpContext.Request.Body);
-         var entities = new List<Object>();
-         foreach(XmlElement xmlItem in xmlDocument.SelectNodes("Entities/Entity"))
-         {
-            string typeName = xmlItem.GetAttribute("Type");
-            if(String.IsNullOrEmpty(typeName))
-               continue;
-            //Console.WriteLine("Trying to deserialize: " + typeName);
-            //Console.WriteLine("Content: " + xmlItem.InnerXml);
-            var xser = new XmlSerializer(Type.GetType(typeName));
-            var reader = new XmlTextReader(new StringReader(xmlItem.InnerXml));
-            entities.Add(xser.Deserialize(reader));
-         }
-         return Ok(entities);
-      }
+
+      ///
+public IActionResult Post()
+{
+    XmlDocument xmlDocument = new XmlDocument();
+    xmlDocument.Load(HttpContext.Request.Body);
+
+    var entities = new List<object>();
+
+    foreach (XmlElement xmlItem in xmlDocument.SelectNodes("Entities/Entity"))
+    {
+        string typeName = xmlItem.GetAttribute("Type");
+        string content = xmlItem.InnerXml;
+
+        if (string.IsNullOrEmpty(typeName) || string.IsNullOrEmpty(content))
+        {
+            continue;
+        }
+
+        // Valida y desinfecta el nombre del tipo y el contenido según sea necesario para evitar ataques de inyección.
+
+        // Por ejemplo, puede restringir typeName
+        // a un conjunto predefinido de valores seguros y validar que el contenido se adhiera a un esquema predefinido..
+
+        if (IsSafeType(typeName) && IsValidContent(content))
+        {
+            // Realiza un procesamiento seguro basado en los datos validados.
+             // Es posible crear instancias de objetos o realizar otras operaciones aquí.
+        }
+    }
+
+    return Ok(entities);
+}
+
+private bool IsSafeType(string typeName)
+{
+    // Implementa un método para comprobar si typeName está dentro de un conjunto de valores permitido.
+     // Devuelve verdadero si es seguro, falso si no.
+}
+
+private bool IsValidContent(string content)
+{
+    // Implementa un método para comprobar si el contenido se ajusta a su esquema predefinido.
+     // Devuelve verdadero si es válido, falso si no.
+}
+
+
+
+
    }
 }
