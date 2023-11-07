@@ -31,8 +31,7 @@ namespace dvcsharp_core_api
             string typeName = xmlItem.GetAttribute("Type");
             if (String.IsNullOrEmpty(typeName))
                continue;
-            //Console.WriteLine("Trying to deserialize: " + typeName);
-            //Console.WriteLine("Content: " + xmlItem.InnerXml);
+               
             var xser = new XmlSerializer(Type.GetType(typeName));
             var reader = new XmlTextReader(new StringReader(xmlItem.InnerXml));
             entities.Add(xser.Deserialize(reader));
